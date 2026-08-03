@@ -1,0 +1,52 @@
+name: ecociclo_chile
+description: "EcoCiclo Chile - Plataforma para facilitar el reciclaje en Chile"
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+
+  # UI
+  cupertino_icons: ^1.0.6
+  google_fonts: ^6.2.1
+
+  # Gestión de estado
+  flutter_riverpod: ^2.5.1
+
+  # Backend
+  appwrite: ^13.0.0
+
+  # Mapas
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  flutter_map_marker_cluster: ^1.3.6
+
+  # Geolocalización
+  geolocator: ^12.0.0
+  permission_handler: ^11.3.1
+
+  # Accesibilidad / Voz
+  flutter_tts: ^4.0.2
+
+  # Utilidades
+  shared_preferences: ^2.2.3
+  url_launcher: ^6.3.0
+  intl: ^0.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
