@@ -70,14 +70,10 @@ class MapNotifier extends StateNotifier<MapState> {
 
   Future<void> getCurrentLocation() async {
     state = state.copyWith(isLoading: true, clearError: true);
-
     try {
       final serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        state = state.copyWith(
-          isLoading: false,
-          errorMessage: 'El servicio de ubicación está desactivado.',
-        );
+        state = state.copyWith(isLoading: false, errorMessage: 'El servicio de ubicación está desactivado.');
         return;
       }
 
@@ -85,35 +81,20 @@ class MapNotifier extends StateNotifier<MapState> {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          state = state.copyWith(
-            isLoading: false,
-            errorMessage: 'Permiso de ubicación denegado.',
-          );
+          state = state.copyWith(isLoading: false, errorMessage: 'Permiso de ubicación denegado.');
           return;
         }
       }
 
       if (permission == LocationPermission.deniedForever) {
-        state = state.copyWith(
-          isLoading: false,
-          errorMessage: 'Permiso de ubicación denegado permanentemente.',
-        );
+        state = state.copyWith(isLoading: false, errorMessage: 'Permiso de ubicación denegado permanentemente.');
         return;
       }
 
-      final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-
-      state = state.copyWith(
-        isLoading: false,
-        currentLocation: LatLng(position.latitude, position.longitude),
-      );
+      final position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      state = state.copyWith(isLoading: false, currentLocation: LatLng(position.latitude, position.longitude));
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: 'No se pudo obtener la ubicación.',
-      );
+      state = state.copyWith(isLoading: false, errorMessage: 'No se pudo obtener la ubicación.');
     }
   }
 
@@ -126,10 +107,32 @@ class MapNotifier extends StateNotifier<MapState> {
   }
 }
 
-final cleanPointRepositoryProvider = Provider<CleanPointRepository>(
-  (ref) => CleanPointRepository(),
-);
+final cleanPointRepositoryProvider = Provider<CleanPointRepository>((ref) => CleanPointRepository());
 
 final mapProvider = StateNotifierProvider<MapNotifier, MapState>(
   (ref) => MapNotifier(ref.watch(cleanPointRepositoryProvider)),
 );
+
+// --- Búsqueda y filtros (mapa rediseñado) ---
+
+final mapSearchQueryProvider = StateProvider<String>((ref) => '');
+
+final mapCategoryFilterProvider = StateProvider<WasteType?>((ref) => null); // null = "Todos"
+
+final mapOpen24hOnlyProvider = StateProvider<bool>((ref) => false);
+
+final filteredCleanPointsProvider = Provider<List<CleanPoint>>((ref) {
+  final query = ref.watch(mapSearchQueryProvider).toLowerCase().trim();
+  final category = ref.watch(mapCategoryFilterProvider);
+  final open24hOnly = ref.watch(mapOpen24hOnlyProvider);
+  final points = ref.watch(mapProvider).cleanPoints;
+
+  return points.where((p) {
+    final matchesQuery = query.isEmpty ||
+        p.name.toLowerCase().contains(query) ||
+        p.address.toLowerCase().contains(query);
+    final matchesCategory = category == null || p.acceptedWaste.contains(category);
+    final matchesOpen24h = !open24hOnly || p.isOpen24h;
+    return matchesQuery && matchesCategory && matchesOpen24h;
+  }).toList();
+});

@@ -1,23 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppColors {
   AppColors._();
 
-  static const Color primary = Color(0xFF2E7D32);
-  static const Color primaryDark = Color(0xFF1B5E20);
-  static const Color primaryLight = Color(0xFF66BB6A);
-  static const Color secondary = Color(0xFF0288D1);
-  static const Color accent = Color(0xFFFFB300);
-
-  static const Color background = Color(0xFFF5F7F5);
+  static const Color background = Color(0xFFF5F5EC);
   static const Color surface = Color(0xFFFFFFFF);
+
+  static const Color primary = Color(0xFF2E5B41);
+  static const Color primaryDark = Color(0xFF1B5E20);
+  static const Color secondary = Color(0xFFD1E6D3);
+  static const Color secondaryAlt = Color(0xFFC8E6C9);
+
+  static const Color accentPaper = Color(0xFFFFF59D);
+  static const Color accentPlastic = Color(0xFFB2DFDB);
+  static const Color accentGlass = Color(0xFFBBDEFB);
+  static const Color accentTrees = Color(0xFFE1BEE7);
+
   static const Color textPrimary = Color(0xFF1A1A1A);
-  static const Color textSecondary = Color(0xFF616161);
+  static const Color textSecondary = Color(0xFF6E6E6E);
+  static const Color textOnPrimary = Color(0xFFFFFFFF);
   static const Color error = Color(0xFFD32F2F);
 
   static const Color highContrastBackground = Color(0xFF000000);
   static const Color highContrastText = Color(0xFFFFFFFF);
   static const Color highContrastPrimary = Color(0xFFFFEB3B);
+}
+
+class AppRadius {
+  AppRadius._();
+  static const double card = 24;
+  static const double button = 24;
+  static const double bottomSheet = 28;
+}
+
+class AppShadows {
+  AppShadows._();
+  static List<BoxShadow> get card => [
+        BoxShadow(
+          color: Colors.grey.withValues(alpha: 0.05),
+          blurRadius: 16,
+          offset: const Offset(0, 4),
+        ),
+      ];
 }
 
 class AppTheme {
@@ -34,28 +59,29 @@ class AppTheme {
         surface: AppColors.surface,
         error: AppColors.error,
       ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+      appBarTheme: AppBarTheme(
+        backgroundColor: AppColors.background,
+        foregroundColor: AppColors.textPrimary,
         elevation: 0,
-        centerTitle: true,
+        centerTitle: false,
+        titleTextStyle: GoogleFonts.poppins(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: AppColors.textPrimary,
+        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.button)),
         ),
       ),
       cardTheme: CardThemeData(
         color: AppColors.surface,
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.card)),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.surface,
@@ -64,25 +90,11 @@ class AppTheme {
         type: BottomNavigationBarType.fixed,
         showUnselectedLabels: true,
       ),
-      textTheme: const TextTheme(
-        headlineLarge: TextStyle(
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
-          color: AppColors.textPrimary,
-        ),
-        headlineMedium: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-          color: AppColors.textPrimary,
-        ),
-        bodyLarge: TextStyle(
-          fontSize: 16,
-          color: AppColors.textPrimary,
-        ),
-        bodyMedium: TextStyle(
-          fontSize: 14,
-          color: AppColors.textSecondary,
-        ),
+      textTheme: TextTheme(
+        headlineLarge: GoogleFonts.poppins(fontSize: 26, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+        headlineMedium: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+        bodyLarge: GoogleFonts.nunito(fontSize: 15, color: AppColors.textPrimary),
+        bodyMedium: GoogleFonts.nunito(fontSize: 13, color: AppColors.textSecondary),
       ),
     );
   }
@@ -110,9 +122,7 @@ class AppTheme {
           foregroundColor: Colors.black,
           padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
           textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -122,24 +132,10 @@ class AppTheme {
         type: BottomNavigationBarType.fixed,
       ),
       textTheme: const TextTheme(
-        headlineLarge: TextStyle(
-          fontSize: 30,
-          fontWeight: FontWeight.bold,
-          color: AppColors.highContrastText,
-        ),
-        headlineMedium: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: AppColors.highContrastText,
-        ),
-        bodyLarge: TextStyle(
-          fontSize: 18,
-          color: AppColors.highContrastText,
-        ),
-        bodyMedium: TextStyle(
-          fontSize: 16,
-          color: Colors.white70,
-        ),
+        headlineLarge: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: AppColors.highContrastText),
+        headlineMedium: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.highContrastText),
+        bodyLarge: TextStyle(fontSize: 18, color: AppColors.highContrastText),
+        bodyMedium: TextStyle(fontSize: 16, color: Colors.white70),
       ),
     );
   }

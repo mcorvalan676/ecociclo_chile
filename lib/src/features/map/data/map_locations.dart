@@ -1,6 +1,6 @@
 import 'package:latlong2/latlong.dart';
 
-enum WasteType { paper, plastic, glass, metal, organic, electronic, batteries, oil }
+enum WasteType { paper, plastic, glass, metal, organic, electronic, batteries, oil, textile }
 
 class CleanPoint {
   final String id;
@@ -9,6 +9,7 @@ class CleanPoint {
   final LatLng location;
   final List<WasteType> acceptedWaste;
   final String schedule;
+  final bool isOpen24h;
 
   const CleanPoint({
     required this.id,
@@ -17,6 +18,7 @@ class CleanPoint {
     required this.location,
     required this.acceptedWaste,
     required this.schedule,
+    this.isOpen24h = false,
   });
 
   factory CleanPoint.fromMap(Map<String, dynamic> map) {
@@ -35,6 +37,7 @@ class CleanPoint {
               ))
           .toList(),
       schedule: map['schedule'] as String,
+      isOpen24h: (map['isOpen24h'] as bool?) ?? false,
     );
   }
 }
@@ -47,11 +50,12 @@ class MapLocationsData {
   static const List<CleanPoint> fallbackCleanPoints = [
     CleanPoint(
       id: 'cp001',
-      name: 'Punto Limpio Providencia',
+      name: 'Estación Tierra Verde',
       address: 'Av. Providencia 2359, Providencia',
       location: LatLng(-33.4260, -70.6183),
-      acceptedWaste: [WasteType.paper, WasteType.plastic, WasteType.glass, WasteType.metal],
-      schedule: 'Lun a Sáb 09:00 - 18:00',
+      acceptedWaste: [WasteType.plastic, WasteType.metal, WasteType.paper, WasteType.textile],
+      schedule: 'Abierto 24 horas',
+      isOpen24h: true,
     ),
     CleanPoint(
       id: 'cp002',
@@ -74,7 +78,7 @@ class MapLocationsData {
   static String wasteTypeLabel(WasteType type) {
     switch (type) {
       case WasteType.paper:
-        return 'Papel y Cartón';
+        return 'Papel';
       case WasteType.plastic:
         return 'Plástico';
       case WasteType.glass:
@@ -86,9 +90,11 @@ class MapLocationsData {
       case WasteType.electronic:
         return 'Electrónico';
       case WasteType.batteries:
-        return 'Pilas y Baterías';
+        return 'Pilas';
       case WasteType.oil:
         return 'Aceite';
+      case WasteType.textile:
+        return 'Ropa';
     }
   }
 }

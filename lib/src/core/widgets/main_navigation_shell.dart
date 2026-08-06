@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../features/home/presentation/home_page.dart';
 import '../../features/map/presentation/map_page.dart';
 import '../../features/guide/presentation/guide_page.dart';
 import '../../features/bot/presentation/bot_page.dart';
 import '../../features/accessibility/presentation/accessibility_page.dart';
 
-class MainNavigationShell extends StatefulWidget {
+final navigationIndexProvider = StateProvider<int>((ref) => 0);
+
+class MainNavigationShell extends ConsumerWidget {
   const MainNavigationShell({super.key});
 
-  @override
-  State<MainNavigationShell> createState() => _MainNavigationShellState();
-}
-
-class _MainNavigationShellState extends State<MainNavigationShell> {
-  int _currentIndex = 0;
-
-  final List<Widget> _pages = const [
+  static const List<Widget> _pages = [
     HomePage(),
     MapPage(),
     GuidePage(),
@@ -24,42 +20,24 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentIndex = ref.watch(navigationIndexProvider);
+
     return Scaffold(
       body: IndexedStack(
-        index: _currentIndex,
+        index: currentIndex,
         children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
+        currentIndex: currentIndex,
+        onTap: (index) => ref.read(navigationIndexProvider.notifier).state = index,
         type: BottomNavigationBarType.fixed,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Inicio',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map_outlined),
-            activeIcon: Icon(Icons.map),
-            label: 'Mapa',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search_outlined),
-            activeIcon: Icon(Icons.search),
-            label: 'Guía',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble_outline),
-            activeIcon: Icon(Icons.chat_bubble),
-            label: 'EcoBot',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.accessibility_new_outlined),
-            activeIcon: Icon(Icons.accessibility_new),
-            label: 'Accesible',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Inicio'),
+          BottomNavigationBarItem(icon: Icon(Icons.map_outlined), activeIcon: Icon(Icons.map), label: 'Mapa'),
+          BottomNavigationBarItem(icon: Icon(Icons.search_outlined), activeIcon: Icon(Icons.search), label: 'Guía'),
+          BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline), activeIcon: Icon(Icons.chat_bubble), label: 'EcoBot'),
+          BottomNavigationBarItem(icon: Icon(Icons.accessibility_new_outlined), activeIcon: Icon(Icons.accessibility_new), label: 'Accesible'),
         ],
       ),
     );
