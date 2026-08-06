@@ -84,11 +84,14 @@ class _MapPageState extends ConsumerState<MapPage> {
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
               child: Row(
                 children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(color: AppColors.surface, shape: BoxShape.circle, boxShadow: AppShadows.card),
-                    child: const Icon(Icons.arrow_back, size: 18),
+                 GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(color: AppColors.surface, shape: BoxShape.circle, boxShadow: AppShadows.card),
+                      child: const Icon(Icons.arrow_back, size: 18),
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(

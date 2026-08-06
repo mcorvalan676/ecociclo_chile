@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/themes/app_theme.dart';
 import '../../../core/widgets/main_navigation_shell.dart';
+import '../../accessibility/presentation/accessibility_page.dart';
+import '../../guide/presentation/guide_page.dart';
+import '../../map/presentation/map_page.dart';
 
 enum ActivityMaterial { paper, plastic, glass }
 
@@ -69,6 +72,44 @@ void _showComingSoon(BuildContext context, String feature) {
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
+  );
+}
+
+void _openMenu(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: AppColors.surface,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.bottomSheet)),
+    ),
+    builder: (context) {
+      return SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.menu_book_outlined, color: AppColors.primary),
+                title: const Text('Guía de Residuos'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const GuidePage()));
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.accessibility_new_outlined, color: AppColors.primary),
+                title: const Text('Accesibilidad'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AccessibilityPage()));
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    },
   );
 }
 
@@ -148,7 +189,7 @@ class _TopBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
-            onTap: () => _showComingSoon(context, 'El menú lateral'),
+            onTap: () => _openMenu(context),
             child: const Icon(Icons.menu_rounded, size: 26, color: AppColors.textPrimary),
           ),
           GestureDetector(
@@ -190,12 +231,12 @@ class _HeroIllustration extends StatelessWidget {
   }
 }
 
-class _ImpactCard extends ConsumerWidget {
+class _ImpactCard extends StatelessWidget {
   final HomeImpactState impact;
   const _ImpactCard({required this.impact});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -313,7 +354,7 @@ class _QuickActionsGrid extends ConsumerWidget {
       (
         icon: Icons.location_on_outlined,
         label: 'Buscar Puntos\nLimpios',
-        onTap: () => ref.read(navigationIndexProvider.notifier).state = 1, // Mapa
+        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MapPage())),
       ),
       (
         icon: Icons.calendar_today_outlined,
@@ -323,12 +364,12 @@ class _QuickActionsGrid extends ConsumerWidget {
       (
         icon: Icons.menu_book_outlined,
         label: 'Consejos y\nTips',
-        onTap: () => ref.read(navigationIndexProvider.notifier).state = 2, // Guía
+        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const GuidePage())),
       ),
       (
         icon: Icons.card_giftcard_outlined,
         label: 'Recompensas',
-        onTap: () => _showComingSoon(context, 'Recompensas'),
+        onTap: () => ref.read(navigationIndexProvider.notifier).state = 2,
       ),
     ];
 

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../features/home/presentation/home_page.dart';
-import '../../features/map/presentation/map_page.dart';
-import '../../features/guide/presentation/guide_page.dart';
 import '../../features/bot/presentation/bot_page.dart';
-import '../../features/accessibility/presentation/accessibility_page.dart';
+import '../../features/rewards/presentation/rewards_page.dart';
+import '../../features/profile/presentation/profile_page.dart';
+import '../themes/app_theme.dart';
+import 'custom_bottom_nav_bar.dart';
 
 final navigationIndexProvider = StateProvider<int>((ref) => 0);
 
@@ -13,10 +14,9 @@ class MainNavigationShell extends ConsumerWidget {
 
   static const List<Widget> _pages = [
     HomePage(),
-    MapPage(),
-    GuidePage(),
     BotPage(),
-    AccessibilityPage(),
+    RewardsPage(),
+    ProfilePage(),
   ];
 
   @override
@@ -24,21 +24,21 @@ class MainNavigationShell extends ConsumerWidget {
     final currentIndex = ref.watch(navigationIndexProvider);
 
     return Scaffold(
-      body: IndexedStack(
-        index: currentIndex,
-        children: _pages,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
+      backgroundColor: AppColors.background,
+      body: IndexedStack(index: currentIndex, children: _pages),
+      bottomNavigationBar: CustomBottomNavBar(
         currentIndex: currentIndex,
         onTap: (index) => ref.read(navigationIndexProvider.notifier).state = index,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(icon: Icon(Icons.map_outlined), activeIcon: Icon(Icons.map), label: 'Mapa'),
-          BottomNavigationBarItem(icon: Icon(Icons.search_outlined), activeIcon: Icon(Icons.search), label: 'Guía'),
-          BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline), activeIcon: Icon(Icons.chat_bubble), label: 'EcoBot'),
-          BottomNavigationBarItem(icon: Icon(Icons.accessibility_new_outlined), activeIcon: Icon(Icons.accessibility_new), label: 'Accesible'),
-        ],
+        onScanTap: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('El escáner estará disponible próximamente 🚧'),
+              backgroundColor: AppColors.primary,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          );
+        },
       ),
     );
   }
