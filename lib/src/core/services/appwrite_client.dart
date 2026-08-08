@@ -3,13 +3,12 @@ import 'package:appwrite/appwrite.dart';
 class AppwriteConfig {
   AppwriteConfig._();
 
-  // TODO en el sentido de "reemplazar por tus valores reales" (no lógica pendiente):
-  // Crea tu proyecto en https://cloud.appwrite.io y reemplaza estos valores.
   static const String endpoint = 'https://cloud.appwrite.io/v1';
-  static const String projectId = 'TU_PROJECT_ID_AQUI';
-  static const String databaseId = 'TU_DATABASE_ID_AQUI';
+  static const String projectId = '6a6e8b260003fefedc9b';
+  static const String databaseId = '6a6e8bf80013de2be331';
   static const String cleanPointsCollectionId = 'clean_points';
   static const String wasteItemsCollectionId = 'waste_items';
+  static const String ecobotFunctionId = '6a73b04d002251966ba8';
 }
 
 class AppwriteClientService {
@@ -26,8 +25,5 @@ class AppwriteClientService {
   late final Client client;
 
   Databases get databases => Databases(client);
-
-  Account get account => Account(client);
-
-  Storage get storage => Storage(client);
+  Functions get functions => Functions(client);
 }
