@@ -8,7 +8,7 @@ class AppwriteConfig {
   static const String databaseId = '6a6e8bf80013de2be331';
   static const String cleanPointsCollectionId = 'clean_points';
   static const String wasteItemsCollectionId = 'waste_items';
-  static const String ecobotFunctionId = '6a73b62e33f6c7aca112';
+  static const String ecobotFunctionId = '6a74f7363f0202dade75';
 }
 
 class AppwriteClientService {

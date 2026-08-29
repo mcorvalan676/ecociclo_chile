@@ -27,4 +27,5 @@ class AppwriteClientService {
 
   Databases get databases => Databases(client);
   Functions get functions => Functions(client);
+  Account get account => Account(client);
 }

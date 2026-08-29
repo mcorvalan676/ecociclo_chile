@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/themes/app_theme.dart';
+import '../../auth/presentation/auth_providers.dart';
 
 class Achievement {
   final String title;
@@ -55,7 +56,22 @@ class ProfileState {
   int get xpToNextLevel => nextLevelXp - currentXp;
 }
 
-final profileProvider = Provider<ProfileState>((ref) => const ProfileState());
+/// El nombre, correo y ubicación vienen de la cuenta real de Appwrite.
+/// Las estadísticas (XP, logros, objetos reciclados) siguen siendo datos
+/// de ejemplo hasta que conectemos el sistema de gamificación.
+final profileProvider = Provider<ProfileState>((ref) {
+  final user = ref.watch(authProvider).value;
+  const fallback = ProfileState();
+  if (user == null || user.name.trim().isEmpty) return fallback;
+  return ProfileState(
+    name: user.name,
+    subtitle: fallback.subtitle,
+    location: fallback.location,
+    level: fallback.level,
+    currentXp: fallback.currentXp,
+    nextLevelXp: fallback.nextLevelXp,
+  );
+});
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -106,12 +122,42 @@ class ProfilePage extends ConsumerWidget {
   }
 }
 
-class _ProfileHeader extends StatelessWidget {
+class _ProfileHeader extends ConsumerWidget {
   final ProfileState profile;
   const _ProfileHeader({required this.profile});
 
+  void _showMenu(BuildContext context, WidgetRef ref) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.bottomSheet)),
+      ),
+      builder: (sheetContext) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.logout, color: AppColors.error),
+                  title: const Text('Cerrar sesión'),
+                  onTap: () async {
+                    Navigator.pop(sheetContext);
+                    await ref.read(authProvider.notifier).logout();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.bottomCenter,
@@ -131,7 +177,10 @@ class _ProfileHeader extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Icon(Icons.arrow_back, color: Colors.white),
-                  const Icon(Icons.more_vert, color: Colors.white),
+                  GestureDetector(
+                    onTap: () => _showMenu(context, ref),
+                    child: const Icon(Icons.more_vert, color: Colors.white),
+                  ),
                 ],
               ),
             ),
