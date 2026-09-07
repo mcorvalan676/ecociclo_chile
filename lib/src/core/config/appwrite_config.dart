@@ -9,7 +9,6 @@ class AppwriteConfig {
   static const String cleanPointsCollectionId = 'clean_points';
   static const String wasteItemsCollectionId = 'waste_items';
   static const String ecobotFunctionId = '6a73b04d002251966ba8';
-
 }
 
 class AppwriteClientService {
